@@ -8,7 +8,7 @@ class Home extends Component {
         return(
             <Container className="mt-3">
                 <Row>
-                    <Col md={{size: 4, offset: 4}}>
+                    <Col lg={{size: 4, offset: 4}} md={{size: 6, offset: 3}}>
                         <ActorLookup name="Actor One"/>
                         <ActorLookup name="Actor Two" className="mt-2"/>
                     </Col>
