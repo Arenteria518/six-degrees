@@ -8,10 +8,12 @@ class ActorLookup extends Component {
         super(props);
         this.state = {
             isFocus: false,
-            value: ''
+            value: '',
+            keepFocus: false
         };
 
         this.onFocus = this.onFocus.bind(this);
+        this.onBlur = this.onBlur.bind(this);
         this.handleDropdownClick = this.handleDropdownClick.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -20,6 +22,17 @@ class ActorLookup extends Component {
             isFocus: true
         })
     }
+    onBlur(){
+        let $this = this;
+        if (this.state.keepFocus) {
+            return;
+        }
+        window.setTimeout(function () {
+            $this.setState({
+                isFocus: false,
+            })
+        }, 200)
+    }
 
     handleChange(event){
         this.setState({value: event.target.value});
@@ -27,8 +40,12 @@ class ActorLookup extends Component {
 
     handleDropdownClick(key){
         this.setState({
-            isFocus: false,
-            value: key
+            value: key,
+            keepFocus: true
+        })
+        this.onBlur()
+        this.setState({
+            keepFocus: false
         })
     }
 
@@ -36,7 +53,7 @@ class ActorLookup extends Component {
         return(
             <div className={`position-relative${this.props.className ? ' ' + this.props.className: ''}`}>
                 <Label for={this.props.name}>{this.props.name}</Label>
-                <Input onFocus={this.onFocus} value={this.state.value} onChange={this.handleChange}/>
+                <Input onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.value} onChange={this.handleChange}/>
                 <AutoComplete
                     show={this.state.isFocus}
                     handleDropdownClick={this.handleDropdownClick}
