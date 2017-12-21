@@ -19,16 +19,26 @@ const ListItem = styled.li`
     list-style: none;
     padding: 4px 8px;
     &:hover{
-        background: #f6f6f6;
+        background: #cecece;
     }
 `;
 
 class  AutoComplete extends Component {
+    constructor(props){
+        super(props)
+
+        this.onClick = this.onClick.bind(this);
+    }
     renderList(items){
         return items.map((item) =>{
-            return <ListItem key={item}>{item}</ListItem>
+            return <ListItem onClick={this.onClick} key={item} data-key={item}>{item}</ListItem>
             }
         )
+    }
+
+    onClick(e){
+        let el = e.target;
+        this.props.handleDropdownClick(el.dataset.key);
     }
     render() {
         return (
