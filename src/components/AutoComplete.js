@@ -18,6 +18,7 @@ const List = styled.ul `
 const ListItem = styled.li`
     list-style: none;
     padding: 4px 8px;
+    cursor: pointer;
     &:hover{
         background: #cecece;
     }
@@ -30,9 +31,10 @@ class  AutoComplete extends Component {
         this.onClick = this.onClick.bind(this);
     }
     renderList(items){
-        return items.map((item) =>{
-            return <ListItem onClick={this.onClick} key={item} data-key={item}>{item}</ListItem>
+        return( items.map((item) =>{
+            return <ListItem onClick={this.onClick} key={item.id} data-key={item.name}>{item.name}</ListItem>
             }
+        )
         )
     }
 
@@ -42,7 +44,7 @@ class  AutoComplete extends Component {
     }
     render() {
         return (
-            <List show={this.props.show}>
+            <List show={this.props.show && this.props.items.length > 0}>
                 {this.renderList(this.props.items)}
             </List>
         )
