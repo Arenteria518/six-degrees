@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { Input, Label } from 'reactstrap';
 import axios from 'axios';
 import _ from 'lodash';
+import { API_KEY } from "../config/keys";
 
 import AutoComplete from './AutoComplete';
-
-
 
 class ActorLookup extends Component {
     constructor(props){
@@ -65,10 +64,10 @@ class ActorLookup extends Component {
         this.setState({
             value: key,
             keepFocus: true
-        })
+        });
         this.setState({
             keepFocus: false
-        })
+        });
     }
 
     removeFocus(){
@@ -85,6 +84,7 @@ class ActorLookup extends Component {
                 <AutoComplete
                     show={this.state.isFocus}
                     handleDropdownClick={this.handleDropdownClick}
+                    getID ={this.props.getActorID}
                     items={this.state.data}
 
                 />

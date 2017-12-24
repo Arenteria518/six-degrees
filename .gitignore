@@ -16,6 +16,8 @@
 .env.test.local
 .env.production.local
 
+#API Keys
+config/keys
 .idea/
 
 npm-debug.log*

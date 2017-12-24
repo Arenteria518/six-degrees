@@ -32,7 +32,7 @@ class  AutoComplete extends Component {
     }
     renderList(items){
         return( items.map((item) =>{
-            return <ListItem onClick={this.onClick} key={item.id} data-key={item.name}>{item.name}</ListItem>
+            return <ListItem onClick={this.onClick} key={item.id} data-key={item.name} data-id={item.id}>{item.name}</ListItem>
             }
         )
         )
@@ -41,6 +41,7 @@ class  AutoComplete extends Component {
     onClick(e){
         let el = e.target;
         this.props.handleDropdownClick(el.dataset.key);
+        this.props.getID(el.dataset.key, el.dataset.id)
     }
     render() {
         return (
