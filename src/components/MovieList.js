@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import _ from 'lodash';
 
 class MovieList extends Component{
 
 
     renderList(actor){
-        return actor.movies.map((movie) => {
+        let movies = _.uniqBy(actor.movies, 'id');
+        return movies.map((movie) => {
             return <li key={movie.title}>{movie.title}</li>
         })
     }
