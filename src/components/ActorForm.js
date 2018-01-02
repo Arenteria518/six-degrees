@@ -24,7 +24,7 @@ class ActorForm extends Component{
 
     handleSubmit(e){
         e.preventDefault();
-        if(this.state.actor1 && this.state.actor2){
+        if(Object.getOwnPropertyNames(this.state.actor1).length !== 0 && Object.getOwnPropertyNames(this.state.actor2).length !== 0){
             this.movieLookup();
             this.setState({
                 actorIDs: []
