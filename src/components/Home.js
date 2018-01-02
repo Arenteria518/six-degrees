@@ -3,6 +3,7 @@ import {Container, Row, Col} from 'reactstrap';
 
 import ActorForm from './ActorForm';
 import MovieList from './MovieList';
+import MovieCompare from './MovieCompare';
 
 class Home extends Component {
     constructor(props){
@@ -31,6 +32,13 @@ class Home extends Component {
             actors: actors
         })
     }
+
+    getActorsForCompare(index){
+        if(this.state.actors[index]){
+            return this.state.actors[index]
+        }
+        else return '';
+    }
     render(){
         return(
             <Container className="mt-3">
@@ -40,7 +48,9 @@ class Home extends Component {
                     </Col>
                 </Row>
                 <Row className='mt-5'>
-                    {this.renderMovieList()}
+                    <Col>
+                    <MovieCompare actor1={this.getActorsForCompare(0)} actor2={this.getActorsForCompare(1)}/>
+                    </Col>
                 </Row>
             </Container>
         )
