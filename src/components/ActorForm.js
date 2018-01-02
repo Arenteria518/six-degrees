@@ -11,58 +11,88 @@ class ActorForm extends Component{
         super(props);
 
         this.state = {
-            actorIDs: []
+            actor1: {},
+            actor2: {}
         }
 
         //bind methods
-        this.getActorID = this.getActorID.bind(this);
+        this.setActor1 = this.setActor1.bind(this);
+        this.setActor2 = this.setActor2.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.movieLookup = this.movieLookup.bind(this);
     };
 
     handleSubmit(e){
         e.preventDefault();
-        if(this.state.actorIDs.length >= 2 ){
+        if(this.state.actor1 && this.state.actor2){
             this.movieLookup();
+            this.setState({
+                actorIDs: []
+            })
         }
         else alert("please select an actor from the dropdown")
     }
-        getActorID(name, id){
-        var actorIDs = this.state.actorIDs.slice();
-        actorIDs.push({
-            name: name,
-            id: id
-        });
+
+    setActor1(name, id){
         this.setState({
-            actorIDs: actorIDs
+            actor1: {
+                name: name,
+                id: id
+            }
+
+        })
+    }
+
+    setActor2(name, id){
+        this.setState({
+            actor2: {
+                name: name,
+                id: id
+            }
+
         })
     }
 
     movieLookup(){
         let actors = [];
-        this.state.actorIDs.slice(Math.max(this.state.actorIDs.length - 2, 0)).forEach( (actorID) => {
-            axios.get(`https://api.themoviedb.org/3/person/${actorID.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
-                .then((response) => {
-                     let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
-                    actors.push({
-                        name: actorID.name,
-                        id: actorID.id,
-                        movies: data
-                    });
-                    this.props.getActors(actors)
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-            }
-        )
+        axios.get(`https://api.themoviedb.org/3/person/${this.state.actor1.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
+            .then((response) => {
+                 let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
+                actors.push({
+                    name: this.state.actor1.name,
+                    id: this.state.actor1.id,
+                    movies: data
+                });
+
+                axios.get(`https://api.themoviedb.org/3/person/${this.state.actor2.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
+                    .then((response) => {
+                        let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
+                        actors.push({
+                            name: this.state.actor2.name,
+                            id: this.state.actor2.id,
+                            movies: data
+                        });
+                        this.setState({
+                            actors: actors
+                        });
+                        this.props.getActors(this.state.actors);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
+
+
 
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <ActorLookup name="Actor One" getActorID={this.getActorID}/>
-                <ActorLookup name="Actor Two" getActorID={this.getActorID} className="mt-2"/>
+                <ActorLookup name="Actor One" getActorID={this.setActor1}/>
+                <ActorLookup name="Actor Two" getActorID={this.setActor2} className="mt-2"/>
                 <Button color='primary' type='submit' className='mt-2'>Submit</Button>
             </form>
         )
