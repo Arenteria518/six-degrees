@@ -65,7 +65,7 @@ class  AutoComplete extends Component {
         let child = list.children[index]
 
         if(child) {
-            child.scrollIntoView();
+            child.scrollIntoView({block: "nearest"});
         }
     }
 
