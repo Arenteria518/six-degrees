@@ -5,6 +5,8 @@ const List = styled.ul `
     position: absolute;
     display: ${props => props.show ? 'block': 'none'};
     background: white;
+    height: 50vh;
+    overflow-y: auto;
     top: 100%;
     left: 0;
     right: 0;
@@ -30,6 +32,7 @@ class  AutoComplete extends Component {
 
         this.onClick = this.onClick.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleListClick = this.handleListClick.bind(this);
     }
 
     onClick(e){
@@ -47,25 +50,35 @@ class  AutoComplete extends Component {
         e.target.classList.remove('active');
     }
 
+    handleListClick(index){
+        if(index != -1) {
+            let name = this.data[index].props['data-name'];
+            let id = this.data[index].props['data-id'];
+
+            this.props.handleDropdownClick(name);
+            this.props.getID(name, id);
+        }
+    }
+
     renderList(items){
-        return( items.map((item, i) =>{
-            return (
-                <ListItem
-                    className={`${this.props.index === i ? 'active' : ''}`}
-                    onClick={this.onClick}
-                    onMouseEnter={this.handleMouseEnter}
-                    onMouseLeave ={this.handleMouseLeave}
-                    key={item.id}
-                    data-index={i}
-                    data-name={item.name}
-                    data-id={item.id}
-                >
-                    {item.name}
-                </ListItem>
-            )
+        this.data = items.map((item, i) =>{
+                return (
+                    <ListItem
+                        className={`${this.props.index === i ? 'active' : ''}`}
+                        onClick={this.onClick}
+                        onMouseEnter={this.handleMouseEnter}
+                        onMouseLeave ={this.handleMouseLeave}
+                        key={item.id}
+                        data-id={item.id}
+                        data-index={i}
+                        data-name={item.name}
+                    >
+                        {item.name}
+                    </ListItem>
+                )
             }
-        )
-        )
+        );
+        return(this.data)
     }
     render() {
         return (

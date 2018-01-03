@@ -95,6 +95,12 @@ class ActorLookup extends Component {
         }
         else if(e.key === 'Enter'){
             e.preventDefault();
+            this.child.handleListClick(this.state.index);
+            this.removeFocus();
+        }
+        else if(e.key === 'Tab') {
+            this.child.handleListClick(this.state.index);
+            this.removeFocus();
         }
 
         this.setState({
@@ -120,6 +126,7 @@ class ActorLookup extends Component {
                     getID ={this.props.getActorID}
                     items={this.state.data}
                     index ={this.state.index}
+                    ref={instance =>{this.child = instance}}
 
                 />
             </div>
