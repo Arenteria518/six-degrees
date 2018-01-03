@@ -51,12 +51,21 @@ class  AutoComplete extends Component {
     }
 
     handleListClick(index){
-        if(index != -1) {
+        if(index !== -1) {
             let name = this.data[index].props['data-name'];
             let id = this.data[index].props['data-id'];
 
             this.props.handleDropdownClick(name);
             this.props.getID(name, id);
+        }
+    }
+
+    handleScroll(index){
+        let list = this.list
+        let child = list.children[index]
+
+        if(child) {
+            child.scrollIntoView();
         }
     }
 
@@ -82,7 +91,7 @@ class  AutoComplete extends Component {
     }
     render() {
         return (
-            <List show={this.props.show && this.props.items.length > 0}>
+            <List innerRef={instance => this.list = instance} show={this.props.show && this.props.items.length > 0}>
                 {this.renderList(this.props.items)}
             </List>
         )

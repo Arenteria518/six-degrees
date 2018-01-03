@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Input, Label } from 'reactstrap';
+import React, {Component} from 'react';
+import {Input, Label} from 'reactstrap';
 import axios from 'axios';
 import _ from 'lodash';
-import { API_KEY } from "../config/keys";
+import {API_KEY} from "../config/keys";
 
 import AutoComplete from './AutoComplete';
 
 class ActorLookup extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             isFocus: false,
@@ -26,7 +26,7 @@ class ActorLookup extends Component {
         this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
-    actorSearch(term){
+    actorSearch(term) {
         this.setState({
             index: -1
         });
@@ -41,12 +41,14 @@ class ActorLookup extends Component {
                 console.log(error)
             })
     }
-    onFocus(){
+
+    onFocus() {
         this.setState({
             isFocus: true
         })
     }
-    onBlur(){
+
+    onBlur() {
         let $this = this;
         if (this.state.keepFocus) {
             return;
@@ -56,17 +58,17 @@ class ActorLookup extends Component {
         }, 200)
     }
 
-    handleChange(event){
+    handleChange(event) {
         this.setState({value: event.target.value});
-        if(event.target.value.length > 0) {
+        if (event.target.value.length > 0) {
             this.actorSearch(event.target.value);
         }
-        if(event.target.value < 1){
+        if (event.target.value < 1) {
             this.setState({data: []});
         }
     }
 
-    handleDropdownClick(name){
+    handleDropdownClick(name) {
         this.setState({
             value: name,
             keepFocus: true
@@ -75,30 +77,33 @@ class ActorLookup extends Component {
             keepFocus: false
         });
     }
-    handleDropdownHover(index){
+
+    handleDropdownHover(index) {
         this.setState({
             index: index
         })
     }
 
-    handleKeyDown(e){
+    handleKeyDown(e) {
         let index = this.state.index;
 
-        if(e.key === 'ArrowDown') {
-            if(index < this.state.data.length -1) {
-                index = index+1;
+        if (e.key === 'ArrowDown') {
+            if (index < this.state.data.length - 1) {
+                index = index + 1;
+                this.child.handleScroll(this.state.index);
             }
-        }else if(e.key === 'ArrowUp'){
-            if(index >= 0) {
+        } else if (e.key === 'ArrowUp') {
+            if (index >= 0) {
                 index = index - 1;
+                this.child.handleScroll(this.state.index - 1);
             }
         }
-        else if(e.key === 'Enter'){
+        else if (e.key === 'Enter') {
             e.preventDefault();
             this.child.handleListClick(this.state.index);
             this.removeFocus();
         }
-        else if(e.key === 'Tab') {
+        else if (e.key === 'Tab') {
             this.child.handleListClick(this.state.index);
             this.removeFocus();
         }
@@ -108,25 +113,28 @@ class ActorLookup extends Component {
         })
     }
 
-    removeFocus(){
+    removeFocus() {
         this.setState({
             isFocus: false,
         })
     }
 
-    render(){
-        return(
-            <div className={`position-relative${this.props.className ? ' ' + this.props.className: ''}`}>
+    render() {
+        return (
+            <div className={`position-relative${this.props.className ? ' ' + this.props.className : ''}`}>
                 <Label for={this.props.name}>{this.props.name}</Label>
-                <Input onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.value} onKeyDown={this.handleKeyDown} onChange={this.handleChange}/>
+                <Input onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.value}
+                       onKeyDown={this.handleKeyDown} onChange={this.handleChange}/>
                 <AutoComplete
                     show={this.state.isFocus}
                     handleDropdownClick={this.handleDropdownClick}
                     handleDropdownHover={this.handleDropdownHover}
-                    getID ={this.props.getActorID}
+                    getID={this.props.getActorID}
                     items={this.state.data}
-                    index ={this.state.index}
-                    ref={instance =>{this.child = instance}}
+                    index={this.state.index}
+                    ref={instance => {
+                        this.child = instance
+                    }}
 
                 />
             </div>
