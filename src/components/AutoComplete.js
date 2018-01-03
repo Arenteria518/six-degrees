@@ -19,7 +19,7 @@ const ListItem = styled.li`
     list-style: none;
     padding: 4px 8px;
     cursor: pointer;
-    &:hover{
+    &.active{
         background: #cecece;
     }
 `;
@@ -29,19 +29,43 @@ class  AutoComplete extends Component {
         super(props)
 
         this.onClick = this.onClick.bind(this);
-    }
-    renderList(items){
-        return( items.map((item) =>{
-            return <ListItem onClick={this.onClick} key={item.id} data-key={item.name} data-id={item.id}>{item.name}</ListItem>
-            }
-        )
-        )
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
     }
 
     onClick(e){
         let el = e.target;
         this.props.handleDropdownClick(el.dataset.key);
         this.props.getID(el.dataset.key, el.dataset.id)
+    }
+
+    handleMouseEnter(e){
+        e.target.classList.add('active');
+        this.props.handleDropdownHover(parseInt(e.target.dataset.index))
+    }
+
+    handleMouseLeave(e){
+        e.target.classList.remove('active');
+    }
+
+    renderList(items){
+        return( items.map((item, i) =>{
+            return (
+                <ListItem
+                    className={`${this.props.index === i ? 'active' : ''}`}
+                    onClick={this.onClick}
+                    onMouseEnter={this.handleMouseEnter}
+                    onMouseLeave ={this.handleMouseLeave}
+                    key={item.id}
+                    data-index={i}
+                    data-key={item.name}
+                    data-id={item.id}
+                >
+                    {item.name}
+                </ListItem>
+            )
+            }
+        )
+        )
     }
     render() {
         return (

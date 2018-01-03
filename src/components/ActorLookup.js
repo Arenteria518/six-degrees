@@ -13,14 +13,17 @@ class ActorLookup extends Component {
             isFocus: false,
             value: '',
             keepFocus: false,
-            data: []
+            data: [],
+            index: 0
         };
 
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.handleDropdownClick = this.handleDropdownClick.bind(this);
+        this.handleDropdownHover = this.handleDropdownHover.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.removeFocus = this.removeFocus.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
     actorSearch(term){
@@ -69,6 +72,33 @@ class ActorLookup extends Component {
             keepFocus: false
         });
     }
+    handleDropdownHover(index){
+        this.setState({
+            index: index
+        })
+    }
+
+    handleKeyDown(e){
+        let index = this.state.index;
+
+        if(e.key === 'ArrowDown') {
+            if(index < this.state.data.length -1) {
+                index = index+1;
+            }
+        }else if(e.key === 'ArrowUp'){
+            if(index > 0) {
+                index = index - 1;
+            }
+        }
+        else if(e.key === 'Enter'){
+            e.preventDefault();
+            console.log('ENter has been clicked')
+        }
+        console.log(index);
+        this.setState({
+            index: index
+        })
+    }
 
     removeFocus(){
         this.setState({
@@ -80,12 +110,14 @@ class ActorLookup extends Component {
         return(
             <div className={`position-relative${this.props.className ? ' ' + this.props.className: ''}`}>
                 <Label for={this.props.name}>{this.props.name}</Label>
-                <Input onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.value} onChange={this.handleChange}/>
+                <Input onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.value} onKeyDown={this.handleKeyDown} onChange={this.handleChange}/>
                 <AutoComplete
                     show={this.state.isFocus}
                     handleDropdownClick={this.handleDropdownClick}
+                    handleDropdownHover={this.handleDropdownHover}
                     getID ={this.props.getActorID}
                     items={this.state.data}
+                    index ={this.state.index}
 
                 />
             </div>
