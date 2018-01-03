@@ -34,8 +34,8 @@ class  AutoComplete extends Component {
 
     onClick(e){
         let el = e.target;
-        this.props.handleDropdownClick(el.dataset.key);
-        this.props.getID(el.dataset.key, el.dataset.id)
+        this.props.handleDropdownClick(el.dataset.name);
+        this.props.getID(el.dataset.name, el.dataset.id)
     }
 
     handleMouseEnter(e){
@@ -57,7 +57,7 @@ class  AutoComplete extends Component {
                     onMouseLeave ={this.handleMouseLeave}
                     key={item.id}
                     data-index={i}
-                    data-key={item.name}
+                    data-name={item.name}
                     data-id={item.id}
                 >
                     {item.name}

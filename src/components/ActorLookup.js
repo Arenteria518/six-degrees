@@ -14,7 +14,7 @@ class ActorLookup extends Component {
             value: '',
             keepFocus: false,
             data: [],
-            index: 0
+            index: -1
         };
 
         this.onFocus = this.onFocus.bind(this);
@@ -27,6 +27,9 @@ class ActorLookup extends Component {
     }
 
     actorSearch(term){
+        this.setState({
+            index: -1
+        });
         axios.get(`https://api.themoviedb.org/3/search/person?api_key=${API_KEY}&language=en-US&query=${term}&page=1&include_adult=false`)
             .then((response) => {
                 let data = _.map(response.data.results, _.partialRight(_.pick, ['name', 'id']));
@@ -63,9 +66,9 @@ class ActorLookup extends Component {
         }
     }
 
-    handleDropdownClick(key){
+    handleDropdownClick(name){
         this.setState({
-            value: key,
+            value: name,
             keepFocus: true
         });
         this.setState({
@@ -86,15 +89,14 @@ class ActorLookup extends Component {
                 index = index+1;
             }
         }else if(e.key === 'ArrowUp'){
-            if(index > 0) {
+            if(index >= 0) {
                 index = index - 1;
             }
         }
         else if(e.key === 'Enter'){
             e.preventDefault();
-            console.log('ENter has been clicked')
         }
-        console.log(index);
+
         this.setState({
             index: index
         })
