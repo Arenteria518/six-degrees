@@ -5,7 +5,7 @@ const List = styled.ul `
     position: absolute;
     display: ${props => props.show ? 'block': 'none'};
     background: white;
-    height: 50vh;
+    max-height: 50vh;
     overflow-y: auto;
     top: 100%;
     left: 0;
@@ -51,9 +51,11 @@ class  AutoComplete extends Component {
     }
 
     handleListClick(index){
-        if(index !== -1) {
-            let name = this.data[index].props['data-name'];
-            let id = this.data[index].props['data-id'];
+        let el = this.data[index];
+
+        if(el) {
+            let name = el.props['data-name'];
+            let id = el.props['data-id'];
 
             this.props.handleDropdownClick(name);
             this.props.getID(name, id);

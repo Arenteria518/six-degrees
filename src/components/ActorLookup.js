@@ -88,11 +88,13 @@ class ActorLookup extends Component {
         let index = this.state.index;
 
         if (e.key === 'ArrowDown') {
+            e.preventDefault();
             if (index < this.state.data.length - 1) {
                 index = index + 1;
                 this.child.handleScroll(index);
             }
         } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
             if (index > 0) {
                 index = index - 1;
                 this.child.handleScroll(index);
