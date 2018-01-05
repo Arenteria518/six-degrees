@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import {Input, Label} from 'reactstrap';
-import axios from 'axios';
-import _ from 'lodash';
-import {API_KEY} from "../config/keys";
 
 import AutoComplete from './AutoComplete';
 
@@ -26,22 +23,6 @@ class ActorLookup extends Component {
         this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
-    actorSearch(term) {
-        this.setState({
-            index: -1
-        });
-        axios.get(`https://api.themoviedb.org/3/search/person?api_key=${API_KEY}&language=en-US&query=${term}&page=1&include_adult=false`)
-            .then((response) => {
-                let data = _.map(response.data.results, _.partialRight(_.pick, ['name', 'id']));
-                this.setState({
-                    data: data
-                })
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-
     onFocus() {
         this.setState({
             isFocus: true
@@ -61,7 +42,12 @@ class ActorLookup extends Component {
     handleChange(event) {
         this.setState({value: event.target.value});
         if (event.target.value.length > 0) {
-            this.actorSearch(event.target.value);
+            this.setState({ index: -1});
+            this.props.getActors(event.target.value, (data) => {
+                this.setState({ data:data });
+            })
+
+
         }
         if (event.target.value < 1) {
             this.setState({data: []});

@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { Button } from 'reactstrap';
-import axios from 'axios';
-import _ from 'lodash';
 
 import ActorLookup from './ActorLookup'
-import {API_KEY} from "../config/keys";
 
 class ActorForm extends Component{
     constructor(props){
@@ -25,7 +22,7 @@ class ActorForm extends Component{
     handleSubmit(e){
         e.preventDefault();
         if(Object.getOwnPropertyNames(this.state.actor1).length !== 0 && Object.getOwnPropertyNames(this.state.actor2).length !== 0){
-            this.movieLookup();
+            this.movieLookup(this.state.actor1, this.state.actor2);
             this.setState({
                 actorIDs: []
             })
@@ -53,46 +50,33 @@ class ActorForm extends Component{
         })
     }
 
-    movieLookup(){
+    movieLookup(actor1, actor2){
         let actors = [];
-        axios.get(`https://api.themoviedb.org/3/person/${this.state.actor1.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
-            .then((response) => {
-                 let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
+        this.props.getMovies(actor1, (data) =>{
+            actors.push({
+                name: actor1.name,
+                id: actor1.id,
+                movies: data
+            });
+
+            this.props.getMovies(actor2, data => {
                 actors.push({
-                    name: this.state.actor1.name,
-                    id: this.state.actor1.id,
+                    name: actor2.name,
+                    id: actor2.id,
                     movies: data
                 });
 
-                axios.get(`https://api.themoviedb.org/3/person/${this.state.actor2.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
-                    .then((response) => {
-                        let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
-                        actors.push({
-                            name: this.state.actor2.name,
-                            id: this.state.actor2.id,
-                            movies: data
-                        });
-                        this.setState({
-                            actors: actors
-                        });
-                        this.props.getActors(this.state.actors);
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
+                this.props.setActorsState(actors);
             })
-            .catch((error) => {
-                console.log(error)
-            })
+        })
+
     }
-
-
 
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <ActorLookup name="Actor One" getActorID={this.setActor1}/>
-                <ActorLookup name="Actor Two" getActorID={this.setActor2} className="mt-2"/>
+                <ActorLookup name="Actor One" getActors={this.props.getActors} getActorID={this.setActor1}/>
+                <ActorLookup name="Actor Two" getActors={this.props.getActors} getActorID={this.setActor2} className="mt-2"/>
                 <Button color='primary' type='submit' className='mt-2'>Submit</Button>
             </form>
         )
