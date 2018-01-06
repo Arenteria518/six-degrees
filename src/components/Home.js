@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {Container, Row, Col} from 'reactstrap';
+import axios from "axios/index";
+import _ from 'lodash';
+import {API_KEY} from "../config/keys";
 
 import ActorForm from './ActorForm';
 import MovieList from './MovieList';
 import MovieCompare from './MovieCompare';
-import axios from "axios/index";
-import _ from 'lodash';
-import {API_KEY} from "../config/keys";
+import SixDegrees from './SixDegrees';
+
 
 class Home extends Component {
     constructor(props) {
@@ -38,7 +40,6 @@ class Home extends Component {
     getMovies(actor, callback){
         axios.get(`https://api.themoviedb.org/3/person/${actor.id}/movie_credits?api_key=${API_KEY}&language=en-US`)
             .then((response) => {
-                console.log(response);
                 let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','character', 'title']));
                 if(callback) callback(data);
             })
@@ -50,7 +51,6 @@ class Home extends Component {
     getCast(movieID, callback){
         axios.get(`https://api.themoviedb.org/3/movie/${movieID}/credits?api_key=${API_KEY}`)
             .then((response) => {
-                console.log(response)
                 let data = _.map(response.data.cast, _.partialRight(_.pick, ['id','name']));
                 if(callback) callback(data);
             })
@@ -70,6 +70,9 @@ class Home extends Component {
             })
         }
         return <div></div>
+    }
+
+    renderSixDegree(){
 
     }
 
@@ -96,7 +99,8 @@ class Home extends Component {
                 </Row>
                 <Row className='mt-5'>
                     <Col>
-                        <MovieCompare actor1={this.getActorsForCompare(0)} actor2={this.getActorsForCompare(1)}/>
+                        <SixDegrees actor1={this.getActorsForCompare(0)} actor2={this.getActorsForCompare(1)} />
+                        {/*<MovieCompare actor1={this.getActorsForCompare(0)} actor2={this.getActorsForCompare(1)}/>*/}
                     </Col>
                 </Row>
             </Container>
